@@ -1,0 +1,43 @@
+# Vacuum Cleaner Agent
+
+# Environment: two rooms A and B, each Dirty or Clean
+environment = {'A': 'Dirty', 'B': 'Dirty'}
+
+def simple_reflex_agent(location):
+    status = environment[location]
+    print("Location:", location, "Status:", status)
+
+    if status == 'Dirty':
+        print("Action: Suck")
+        environment[location] = 'Clean'
+    elif location == 'A':
+        print("Action: Move Right")
+        location = 'B'
+    else:
+        print("Action: Move Left")
+        location = 'A'
+
+    return location
+
+def goal_based_agent(location):
+    status = environment[location]
+    print("Location:", location, "Status:", status)
+
+    if status == 'Dirty':
+        print("Action: Suck")
+        environment[location] = 'Clean'
+    elif environment['A'] == 'Clean' and environment['B'] == 'Clean':
+        print("Goal reached: both rooms clean. Stopping.")
+        return None
+    else:
+        location = 'B' if location == 'A' else 'A'
+        print("Action: Move to", location)
+
+    return location
+
+
+print("---- Simple Reflex Agent ----")
+environment = {'A': 'Dirty', 'B': 'Dirty'}
+loc = 'A'
+for step in range(6):          # run for a fixed number of steps
+    loc = simple_reflex_agent(loc)
