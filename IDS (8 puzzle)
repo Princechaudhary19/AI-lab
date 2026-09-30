@@ -1,0 +1,98 @@
+def dls(state, goal, depth, path, iterations):
+    iterations[0] += 1
+
+    if state == goal:
+        return path
+
+    if depth == 0:
+        return None
+
+    id = state.index('_')
+    row, col = divmod(id, 3)
+
+    moves = []
+
+    if row > 0:
+        moves.append(id - 3)       # Up
+
+    if row < 2:
+        moves.append(id + 3)       # Down
+
+    if col > 0:
+        moves.append(id - 1)       # Left
+
+    if col < 2:
+        moves.append(id + 1)       # Right
+
+    for pos in reversed(moves):
+        new_state = list(state)
+
+        new_state[id], new_state[pos] = (
+            new_state[pos],
+            new_state[id]
+        )
+
+        new_state = tuple(new_state)
+
+        if new_state not in path:
+            result = dls(
+                new_state,
+                goal,
+                depth - 1,
+                path + [new_state],
+                iterations
+            )
+
+            if result:
+                return result
+
+    return None
+
+
+def ids(initial, goal):
+    depth = 0
+    iterations = [0]
+
+    while True:
+        path = dls(
+            initial,
+            goal,
+            depth,
+            [initial],
+            iterations
+        )
+
+        if path:
+            return path, iterations[0]
+
+        depth += 1
+
+
+initial = (
+    1, 2, 3,
+    4, 5, 6,
+    7, 8, '_'
+)
+
+goal = (
+    6, 7, 4,
+    5, 8, 3,
+    '_', 2, 1
+)
+
+path, iterations = ids(initial, goal)
+
+
+if path:
+    for state in path:
+        print(state[0:3])
+        print(state[3:6])
+        print(state[6:9])
+        print()
+
+    print("Goal Found!")
+    print("Number of iterations:", iterations)
+
+else:
+    print("No solution")
+    print("Number of iterations:", iterations)
